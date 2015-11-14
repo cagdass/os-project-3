@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 void *philosopher(void *p)
 {
@@ -25,7 +26,7 @@ int main(int argc, char *argv[])
 	pthread_t tid[MAXTH];
 	int N = atoi(argv[1]);
 	int i;
-
+	printf("initialize dp lib\n");
 	dp_init(N);
 
 	for (i = 0; i < N; ++i) {

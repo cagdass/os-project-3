@@ -9,6 +9,11 @@
 #define MINBUCKETS 10
 #define MAXBUCKETS 100
 
+struct node{
+	int data;
+	struct node * next;
+};
+
 void hash_init(int N);
 
 int hash_insert(int k);

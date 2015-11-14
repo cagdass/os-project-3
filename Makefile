@@ -3,7 +3,7 @@
 #type make to compile with this Makefile
 
 #you may change the path below to your compile directory
-MYPATH = /home/korpe/project3
+MYPATH = /home/cagdas/Desktop/os-project-3/
 
 
 all: libdp app1  libhash  app2

@@ -3,6 +3,9 @@
 
 #include "dp.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <pthread.h>
 
 /* 
    - global variable definitions here.
@@ -12,10 +15,13 @@
    ....
 */
 
+#define lock pthread_mutex_lock
+#define unlock pthread_mutex_unlock
+
 
 int* forks;
-int busy;
-int SIZE;
+pthread_mutex_t mut = PTHREAD_MUTEX_INITIALIZER;
+int SIZE = 0;
 
 void dp_init(int N)
 {
@@ -26,7 +32,6 @@ void dp_init(int N)
 		for(i = 0; i < N; i++){
 			forks[i] = 0;
 		}
-		busy = 0;
 		SIZE = N;
 	}
 	else{
@@ -36,29 +41,56 @@ void dp_init(int N)
 
 void dp_get_forks(int i)
 {
-	while(TRUE){
-		while(busy){
-			sleep(1);
-		}
-		busy = 1;
-		if(forks[i%SIZE] == 0 && forks[i-1%SIZE] == 0){
-			forks[i%SIZE] = 1;
-			forks[i-1%SIZE] = 1;
-			busy = 0;
-			break;
-		}
-		busy = 0;
+	if(SIZE >= 5 && SIZE <= 20){
+		int right = i;
+    	int left = (i - 1 == -1) ? SIZE - 1 : (i - 1);
+		while(1){
+            lock(&mut);
+            if(forks[right] || forks[left])
+            {
+                unlock(&mut);     // give up the forks unless you can take both at once.
+                printf("Philosopher %d cannot take forks. Giving up and thinking.\n",i); 
+                sleep(1);
+                continue;
+            }
+            if(i % 2 == 0){
+            	forks[right] = 1; // take right fork first.
+            	printf("Philosopher %d took fork %d\n", i, right);
+            	forks[left] = 1;
+            	printf("Philosopher %d took fork %d\n", i, left);
+            	unlock(&mut);
+            	break;
+            }
+            else{
+            	forks[left] = 1; // take left fork first.
+            	printf("Philosopher %d took fork %d\n", i, left);
+            	forks[right] = 1;
+            	printf("Philosopher %d took fork %d\n", i, right);
+            	unlock(&mut);
+            	break;
+            }
+            
+            
+            
+        }
 	}
+	else{
+		printf("Forgot to initialize?\n");
+	}
+	
 }
 
 void dp_put_forks(int i)
 {
-	printf("putting forks\n");
-	while(busy){
-		sleep(1);
+	if(SIZE >= 5 && SIZE <= 20){
+		int right = i;
+    	int left = (i - 1 == -1) ? SIZE - 1 : (i - 1);
+        forks[right] = 0;
+        printf("Philosopher %d gave up fork %d\n", i, right);
+        forks[left] = 0;
+        printf("Philosopher %d gave up fork %d\n", i, left);
 	}
-	busy = 1;
-	forks[i%SIZE] = 0;
-	forks[i-1%SIZE] = 0;
-	busy = 0;
+	else{
+		printf("Forgot to initialize?\n");
+	}
 }
