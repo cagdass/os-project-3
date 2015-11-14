@@ -1,0 +1,7 @@
+/* $Id: README,v 1.1 2015/11/08 18:47:29 korpe Exp korpe $  */
+
+-- type "make" to compile libraries and programs
+-- app1 and app2 are simple test programs showing how to use
+libraries
+-- for example: type "./app1 5" to simulate 5 philosophers
+-- for example: type "./app2 20" to run a process that  creates 20 threads acting on hash table concurrently. 
