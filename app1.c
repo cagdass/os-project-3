@@ -23,6 +23,8 @@ void *philosopher(void *p)
 
 int main(int argc, char *argv[])
 {
+	clock_t start, end;
+	start = clock();
 	pthread_t tid[MAXTH];
 	int N = atoi(argv[1]);
 	int i;
@@ -36,5 +38,7 @@ int main(int argc, char *argv[])
 	for (i = 0; i < N; ++i)
 		pthread_join(tid[i], NULL);
 
+	end = clock();
+    printf( "Number of seconds: %f\n", (end-start)/(double)CLOCKS_PER_SEC );
 	return (0);
 }

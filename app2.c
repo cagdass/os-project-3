@@ -13,12 +13,12 @@ void *worker(void *p)
 	int i;
         int num = (long) p; 
 
-	for (i = 0; i < 100; ++i) {
-		hash_insert(num*1000 + i);
+	for (i = 0; i < 5; ++i) {
+		hash_insert(num*10 + i);
 	}
 
-	for (i = 20; i < 30; ++i) {
-		hash_delete(num*1000 + i);
+	for (i = 20; i < 25; ++i) {
+		hash_delete(num*10 + i);
 	}
 
 	pthread_exit(NULL);
@@ -26,6 +26,9 @@ void *worker(void *p)
 
 int main(int argc, char *argv[])
 {
+	clock_t start, end;
+	start = clock();
+	
 	pthread_t tid[MAXTH];
 	int i;
 	int N;
@@ -45,6 +48,9 @@ int main(int argc, char *argv[])
 
 	for (i = 0; i < N; ++i)
 		pthread_join(tid[i], NULL);
+
+	end = clock();
+    printf( "Number of seconds: %f\n", (end-start)/(double)CLOCKS_PER_SEC );
 
 	return (0);
 }
